@@ -1,0 +1,142 @@
+:root{
+  --green-deep:#0E472D;
+  --gold:#D4AF37;
+  --muted:#6B6B6B;
+  --bg:#FAF9F6;
+  --white:#FFFFFF;
+  --container:1100px;
+  --radius:10px;
+  --max-width:1200px;
+  --gap:24px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;font-family:Inter,system-ui,Segoe UI,Roboto,"Helvetica Neue",Arial; color:var(--green-deep); background:var(--bg); -webkit-font-smoothing:antialiased}
+.container{max-width:var(--container);margin:0 auto;padding:40px 20px}
+.site-header{position:sticky;top:0;background:rgba(255,255,255,0.9);backdrop-filter:blur(4px);z-index:60;border-bottom:1px solid #eee}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 0}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--green-deep)}
+.brand img{height:36px}
+.main-nav{display:flex;align-items:center;gap:18px}
+.main-nav a{color:var(--green-deep);text-decoration:none;font-weight:600}
+.btn{padding:10px 16px;border-radius:8px;font-weight:700;border:0;cursor:pointer;text-decoration:none;display:inline-block}
+.btn.primary{background:linear-gradient(90deg,var(--green-deep),#1f603f);color:var(--white)}
+.btn.ghost{background:transparent;border:2px solid rgba(255,255,255,0.16);color:var(--white)}
+.btn.outline{background:transparent;border:2px solid var(--green-deep);color:var(--green-deep)}
+
+/* Hero */
+.hero{position:relative;height:460px;display:flex;align-items:center}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:relative;color:var(--white);z-index:2;max-width:720px}
+.hero h1{font-size:36px;margin:0 0 12px}
+.hero p{margin:0 0 20px;color:rgba(255,255,255,0.92);font-size:18px}
+.hero-ctas .btn{margin-right:12px}
+
+/* sections */
+.live-news{padding-top:40px;padding-bottom:24px}
+.live-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:16px}
+.ticker-card,.chart-card,.news-card{background:var(--white);padding:18px;border-radius:10px;box-shadow:0 8px 20px rgba(12,20,30,0.04)}
+.ticker-title{font-weight:800;margin-bottom:8px}
+.price-ticker{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.price{font-weight:700;float:right}
+.chart-placeholder img{width:100%;border-radius:8px}
+
+/* investment cards */
+.invest-overview{padding:48px 0}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:16px}
+.card{background:var(--white);padding:20px;border-radius:12px;box-shadow:0 6px 18px rgba(12,20,30,0.04);text-align:left}
+.card-icon{font-size:28px}
+.rate{font-size:18px;font-weight:800;margin:12px 0}
+.center-cta{text-align:center;margin-top:22px}
+
+/* partners */
+.partners{background:linear-gradient(180deg,var(--green-deep),#0b3b25);color:var(--white);padding:36px 20px;border-radius:8px;margin-top:28px}
+.partner-logos{display:flex;gap:16px;align-items:center}
+
+/* farm rental */
+.farm-rental{padding:48px 0}
+.farm-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.farm-grid img{width:100%;border-radius:10px}
+
+/* testimonials */
+.testimonials{padding:32px 0}
+.testimonial blockquote{margin:0 0 8px;font-style:italic}
+.testimonial cite{color:var(--muted)}
+
+/* CTA banner */
+.cta-banner{background:var(--green-deep);color:var(--white);padding:28px;border-radius:8px;margin:36px 20px}
+.cta-banner .btn{margin-right:12px}
+
+/* footer */
+.site-footer{background:#fff;padding:28px 20px;border-top:1px solid #eee}
+.footer-inner{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}
+.footer-logo{height:28px}
+
+/* responsive */
+@media (max-width:900px){
+  .live-grid{grid-template-columns:1fr;align-items:stretch}
+  .cards{grid-template-columns:1fr}
+  .farm-grid{grid-template-columns:1fr}
+  .hero{height:520px}
+  .header-inner{padding:10px}
+  .main-nav{display:none}
+  .hamburger{display:block}
+}
+.hamburger{display:none;background:none;border:0;font-size:24px;cursor:pointer}/* main.js - basic interactions (no frameworks). Replace fake data with real APIs. */
+document.addEventListener('DOMContentLoaded', function(){
+  // mobile toggle
+  const hamburger = document.getElementById('hamburger') || document.getElementById('hamburger-2') || document.getElementById('hamburger-3');
+  const nav = document.querySelector('.main-nav');
+  if(hamburger){
+    hamburger.addEventListener('click', ()=> {
+      nav && nav.classList.toggle('open');
+    });
+  }
+
+  // Fake live ticker demo: rotates small random variations
+  const prices = {
+    rice: 4.21,
+    maize: 5.32,
+    cocoa: 2450.76,
+    palm: 1120.50
+  };
+  function bump(val){
+    // small random walk
+    return +(val * (1 + (Math.random()-0.5)/200)).toFixed(2);
+  }
+  function updateTicker(){
+    prices.rice = bump(prices.rice);
+    prices.maize = bump(prices.maize);
+    prices.cocoa = bump(prices.cocoa);
+    prices.palm = bump(prices.palm);
+    document.querySelectorAll('.price').forEach(el=>{
+      const key = el.dataset.key;
+      if(key && prices[key]!==undefined){
+        el.textContent = (prices[key] >= 1000) ? '$' + Number(prices[key]).toLocaleString() : '$' + prices[key];
+      }
+    });
+  }
+  setInterval(updateTicker, 4000);
+
+  // Contact form demo handler (replace with real endpoint)
+  const contactForm = document.getElementById('contact-form');
+  if(contactForm){
+    contactForm.addEventListener('submit', e=>{
+      e.preventDefault();
+      alert('Thank you — message queued (demo). Replace with your API endpoint to send messages.');
+      contactForm.reset();
+    });
+  }
+
+  // Start invest button scroll to investment
+  const investBtns = document.querySelectorAll('#start-invest-btn, #start-invest-btn2, #start-invest-plan');
+  investBtns.forEach(btn=>{
+    btn && btn.addEventListener('click', (e)=>{
+      e.preventDefault();
+      window.location.href = 'investment.html';
+    });
+  });
+});<svg xmlns="http://www.w3.org/2000/svg" width="160" height="36" viewBox="0 0 160 36" role="img" aria-label="BridgeVest Global">
+  <rect width="160" height="36" rx="6" fill="#0E472D"/>
+  <text x="12" y="23" font-family="sans-serif" font-size="12" fill="#fff">BridgeVest Global</text>
+</svg>
